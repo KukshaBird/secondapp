@@ -2,6 +2,8 @@
  * Utility functions for text transformations
  */
 
+export type TransformationType = 'none' | 'shuffle' | 'reverse' | 'random';
+
 /**
  * Shuffle an array using Fisher-Yates algorithm
  * @param array Array to shuffle
@@ -24,7 +26,7 @@ const shuffleArray = <T>(array: T[]): T[] => {
  */
 export const transformWord = (
   word: string,
-  transformType: 'none' | 'shuffle' | 'reverse' | 'random' = 'none'
+  transformType: TransformationType = 'none'
 ): string[] => {
   const chars = word.split('');
   
@@ -39,9 +41,9 @@ export const transformWord = (
     
     case 'random':
       // Choose a random transformation type
-      const transforms = ['none', 'shuffle', 'reverse'];
+      const transforms: TransformationType[] = ['none', 'shuffle', 'reverse'];
       const randomTransform = transforms[Math.floor(Math.random() * transforms.length)];
-      return transformWord(word, randomTransform as any);
+      return transformWord(word, randomTransform);
     
     case 'none':
     default:

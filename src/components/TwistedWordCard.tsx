@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { transformWord } from '../utils/textTransformations';
+import { transformWord, TransformationType } from '../utils/textTransformations';
 
 interface TwistedWordCardProps {
   word: string;                // The word to display (required)
   imagePath?: string;          // Path to image (for future implementation)
   maxLength?: number;          // Maximum character length (default: 16)
-  transformType?: 'none' | 'shuffle' | 'reverse' | 'random';  // Type of position transformation
+  transformType?: TransformationType;  // Type of position transformation
 }
 
 const TwistedWordCard: React.FC<TwistedWordCardProps> = ({
