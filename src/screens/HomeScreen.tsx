@@ -6,13 +6,22 @@ import {
   View,
   Alert,
 } from 'react-native';
-import { WordGame } from '../components';
+import { WordGame, DifficultySelector } from '../components';
+import type { Difficulty } from '../components';
 import { WORD_IMAGE_PAIRS } from '../constants';
 
 const HomeScreen = (): React.JSX.Element => {
   // Current word-image pair index
   const [currentPairIndex, setCurrentPairIndex] = useState<number>(0);
   const currentPair = WORD_IMAGE_PAIRS[currentPairIndex];
+  
+  // Difficulty level
+  const [difficulty, setDifficulty] = useState<Difficulty>('hard');
+  
+  // Handle difficulty change
+  const handleDifficultyChange = (newDifficulty: Difficulty): void => {
+    setDifficulty(newDifficulty);
+  };
   
   // Handle successful completion of a word
   const handleSuccess = (): void => {
@@ -35,10 +44,16 @@ const HomeScreen = (): React.JSX.Element => {
       <Text style={styles.title}>Word Arrangement Game</Text>
       <Text style={styles.subtitle}>Arrange the letters to form the correct word</Text>
       
+      <DifficultySelector 
+        difficulty={difficulty}
+        onDifficultyChange={handleDifficultyChange}
+      />
+      
       <WordGame 
         word={currentPair.word}
         imagePath={currentPair.image}
         onSuccess={handleSuccess}
+        difficulty={difficulty}
       />
     </SafeAreaView>
   );

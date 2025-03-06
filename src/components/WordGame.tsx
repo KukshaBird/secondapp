@@ -4,11 +4,17 @@ import { transformWord } from '../utils/textTransformations';
 import DraggableCharacter from './DraggableCharacter';
 import WordTargetArea from './WordTargetArea';
 import { WordGameProps, GameStatus } from '../types';
+import { Difficulty } from './DifficultySelector';
 
-const WordGame: React.FC<WordGameProps> = ({
+interface ExtendedWordGameProps extends WordGameProps {
+  difficulty?: Difficulty;
+}
+
+const WordGame: React.FC<ExtendedWordGameProps> = ({
   word,
   imagePath = 'https://images.unsplash.com/photo-1553095066-5014bc7b7f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-  onSuccess
+  onSuccess,
+  difficulty = 'hard'
 }) => {
   // Original word
   const originalWord = word.toLowerCase();
@@ -144,6 +150,13 @@ const WordGame: React.FC<WordGameProps> = ({
       {/* Display the image */}
       <View style={styles.imageContainer}>
         <Image source={{ uri: imagePath }} style={styles.image} />
+        
+        {/* Show the word hint if difficulty is easy */}
+        {difficulty === 'easy' && (
+          <View style={styles.wordHintContainer}>
+            <Text style={styles.wordHint}>{originalWord}</Text>
+          </View>
+        )}
       </View>
       
       {/* Display the target area where characters will be arranged */}
@@ -209,6 +222,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
+  },
+  wordHintContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingVertical: 8,
+  },
+  wordHint: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
