@@ -7,7 +7,7 @@ import { WordGameProps, GameStatus } from '../types';
 
 const WordGame: React.FC<WordGameProps> = ({
   word,
-  imagePath = 'https://via.placeholder.com/300x200?text=Picture',
+  imagePath = 'https://images.unsplash.com/photo-1553095066-5014bc7b7f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
   onSuccess
 }) => {
   // Original word
