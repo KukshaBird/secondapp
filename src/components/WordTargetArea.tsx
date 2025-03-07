@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { WordTargetAreaProps } from '../types';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants';
 
 const WordTargetArea: React.FC<WordTargetAreaProps> = ({
   targetSlots,
@@ -26,22 +27,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginVertical: 20,
+    marginVertical: SPACING.lg,
+    backgroundColor: COLORS.background,
+    padding: SPACING.md,
+    borderRadius: RADIUS.medium,
+    ...SHADOWS.small,
   },
   slot: {
-    width: 40,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#666',
+    width: 48,
+    height: 48,
+    borderWidth: 2,
+    borderColor: COLORS.border,
     borderStyle: 'dashed',
-    margin: 5,
+    margin: SPACING.sm,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: RADIUS.medium,
   },
   char: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: TYPOGRAPHY.fontSizes.xl,
+    fontWeight: TYPOGRAPHY.fontWeights.bold,
+    color: COLORS.primary,
   }
 });
 

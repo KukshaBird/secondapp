@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Alert, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native';
 import { transformWord } from '../utils/textTransformations';
 import DraggableCharacter from './DraggableCharacter';
 import WordTargetArea from './WordTargetArea';
 import { WordGameProps, GameStatus } from '../types';
 import { Difficulty } from './DifficultySelector';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants';
 
 interface ExtendedWordGameProps extends WordGameProps {
   difficulty?: Difficulty;
@@ -180,30 +181,30 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       </View>
       
       {/* Reset button */}
-      <Button title="Reset" onPress={resetGame} />
+      <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+        <Text style={styles.resetButtonText}>Reset</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    margin: 10,
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: RADIUS.large,
+    padding: SPACING.lg,
+    margin: SPACING.md,
+    marginBottom: SPACING.xxl,
     alignItems: 'center',
+    ...SHADOWS.medium,
   },
   imageContainer: {
     width: '100%',
     height: 200,
-    marginBottom: 20,
-    borderRadius: 8,
+    marginBottom: SPACING.lg,
+    borderRadius: RADIUS.medium,
     overflow: 'hidden',
+    ...SHADOWS.small,
   },
   image: {
     width: '100%',
@@ -211,17 +212,18 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   instruction: {
-    fontSize: 16,
-    marginBottom: 10,
+    fontSize: TYPOGRAPHY.fontSizes.md,
+    marginBottom: SPACING.md,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.fontWeights.medium,
+    color: COLORS.darkText,
   },
   scrambledContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: SPACING.lg,
+    marginBottom: SPACING.lg,
   },
   wordHintContainer: {
     position: 'absolute',
@@ -229,14 +231,26 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingVertical: 8,
+    paddingVertical: SPACING.sm,
   },
   wordHint: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: TYPOGRAPHY.fontSizes.lg,
+    fontWeight: TYPOGRAPHY.fontWeights.bold,
   },
+  resetButton: {
+    backgroundColor: COLORS.secondary,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.round,
+    ...SHADOWS.small,
+  },
+  resetButtonText: {
+    color: 'white',
+    fontWeight: TYPOGRAPHY.fontWeights.semibold,
+    fontSize: TYPOGRAPHY.fontSizes.md,
+  }
 });
 
 export default WordGame; 

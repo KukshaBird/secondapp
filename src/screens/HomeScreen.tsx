@@ -5,10 +5,12 @@ import {
   Text,
   View,
   Alert,
+  StatusBar,
 } from 'react-native';
 import { WordGame, DifficultySelector } from '../components';
 import type { Difficulty } from '../components';
 import { WORD_IMAGE_PAIRS } from '../constants';
+import { COLORS, TYPOGRAPHY, SPACING } from '../constants';
 
 const HomeScreen = (): React.JSX.Element => {
   // Current word-image pair index
@@ -40,42 +42,69 @@ const HomeScreen = (): React.JSX.Element => {
   };
   
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Word Arrangement Game</Text>
-      <Text style={styles.subtitle}>Arrange the letters to form the correct word</Text>
-      
-      <DifficultySelector 
-        difficulty={difficulty}
-        onDifficultyChange={handleDifficultyChange}
-      />
-      
-      <WordGame 
-        word={currentPair.word}
-        imagePath={currentPair.image}
-        onSuccess={handleSuccess}
-        difficulty={difficulty}
-      />
-    </SafeAreaView>
+    <>
+      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Word Wizard</Text>
+          <Text style={styles.subtitle}>Arrange letters to form words</Text>
+        </View>
+        
+        <DifficultySelector 
+          difficulty={difficulty}
+          onDifficultyChange={handleDifficultyChange}
+        />
+        
+        <WordGame 
+          word={currentPair.word}
+          imagePath={currentPair.image}
+          onSuccess={handleSuccess}
+          difficulty={difficulty}
+        />
+        
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressText}>
+            Word {currentPairIndex + 1} of {WORD_IMAGE_PAIRS.length}
+          </Text>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    padding: 20,
+    backgroundColor: COLORS.background,
+  },
+  header: {
+    backgroundColor: COLORS.primary,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.xl,
+    paddingHorizontal: SPACING.lg,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.fontSizes.xxxl,
+    fontWeight: TYPOGRAPHY.fontWeights.bold,
     textAlign: 'center',
-    marginBottom: 10,
+    color: 'white',
+    marginBottom: SPACING.xs,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: TYPOGRAPHY.fontSizes.md,
     textAlign: 'center',
-    marginBottom: 20,
-    color: '#666',
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  progressContainer: {
+    padding: SPACING.md,
+    alignItems: 'center',
+  },
+  progressText: {
+    color: COLORS.lightText,
+    fontSize: TYPOGRAPHY.fontSizes.sm,
+    fontWeight: TYPOGRAPHY.fontWeights.medium,
   }
 });
 

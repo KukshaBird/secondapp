@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { COLORS, TYPOGRAPHY, RADIUS, SPACING, SHADOWS } from '../constants';
 
 export type Difficulty = 'easy' | 'hard';
 
@@ -50,35 +51,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: SPACING.lg,
+    paddingBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.divider,
   },
   label: {
-    fontSize: 16,
-    marginRight: 10,
+    fontSize: TYPOGRAPHY.fontSizes.md,
+    color: COLORS.darkText,
+    fontWeight: TYPOGRAPHY.fontWeights.medium,
+    marginRight: SPACING.md,
   },
   buttonContainer: {
     flexDirection: 'row',
+    backgroundColor: COLORS.border,
+    borderRadius: RADIUS.round,
+    padding: SPACING.xs,
   },
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    marginHorizontal: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.round,
+    marginHorizontal: 2,
   },
   activeButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: COLORS.primary,
+    ...SHADOWS.small
   },
   buttonText: {
-    color: '#555',
-    fontWeight: '500',
+    color: COLORS.lightText,
+    fontWeight: TYPOGRAPHY.fontWeights.medium,
+    fontSize: TYPOGRAPHY.fontSizes.sm,
   },
   activeButtonText: {
     color: 'white',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.fontWeights.semibold,
   }
 });
 
