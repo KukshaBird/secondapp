@@ -33,8 +33,12 @@ const TwistedWordCard: React.FC<TwistedWordCardProps> = ({
       {/* Characters container */}
       <View style={styles.characterContainer}>
         {transformedChars.map((char, index) => (
-          <View key={index} style={styles.box}>
-            <Text style={styles.char}>{char}</Text>
+          <View key={index} style={styles.boxWrapper}>
+            <View style={styles.boxShadow}>
+              <View style={styles.box}>
+                <Text style={styles.char}>{char}</Text>
+              </View>
+            </View>
           </View>
         ))}
       </View>
@@ -44,21 +48,22 @@ const TwistedWordCard: React.FC<TwistedWordCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 32,
+    paddingBottom: 36,
+    margin: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    margin: 10,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
   },
   imageContainer: {
     width: '100%',
-    height: 150,
-    marginBottom: 10,
-    borderRadius: 4,
+    height: 160,
+    marginBottom: 24,
+    borderRadius: 16,
     overflow: 'hidden',
   },
   image: {
@@ -70,19 +75,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    marginHorizontal: -2,
+  },
+  boxWrapper: {
+    margin: 2,
+  },
+  boxShadow: {
+    borderRadius: 14,
+    backgroundColor: '#ffffff',
   },
   box: {
-    width: 40,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#000',
-    margin: 5,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 14,
+    backgroundColor: '#e6ebff',
+    borderWidth: 2.5,
+    borderColor: '#3b5bdb',
+    overflow: 'hidden',
   },
   char: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#1a365d',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+    height: 24,
+    lineHeight: 24,
   },
 });
 

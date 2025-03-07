@@ -8,6 +8,7 @@ import { Difficulty } from './DifficultySelector';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants';
 import Effects from './Effects';
 import ShakeView from './ShakeView';
+import { playSoundEffect, releaseSounds } from '../utils/soundEffects';
 
 interface ExtendedWordGameProps extends WordGameProps {
   difficulty?: Difficulty;
@@ -60,11 +61,20 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     setShowErrorEffect(false);
   }, [originalWord]);
 
+  useEffect(() => {
+    return () => {
+      // Cleanup sounds when component unmounts
+      releaseSounds();
+    };
+  }, []);
+
   // Handle selecting a character from scrambled area
   const handleCharacterSelect = (index: number) => {
     if (selectedIndices.includes(index) || nextAvailableSlot >= originalWord.length || showWinEffect || showErrorEffect) {
       return;
     }
+    
+    playSoundEffect.pop(); // Play pop sound when selecting a character
     
     // Mark this character as selected
     setSelectedIndices([...selectedIndices, index]);
@@ -91,6 +101,8 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     if (targetArrangement[index] === null || showWinEffect || showErrorEffect) {
       return;
     }
+    
+    playSoundEffect.pop(); // Play pop sound when removing a character
     
     // Find the original index of this character
     const charToRemove = targetArrangement[index];
@@ -126,6 +138,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     
     if (arrangedWord === originalWord) {
       setGameStatus('success');
+      playSoundEffect.complete(); // Play completion sound on success
       
       // Show win effect
       setShowWinEffect(true);
@@ -133,6 +146,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       // Move to next word after animation ends
     } else {
       setGameStatus('failed');
+      playSoundEffect.error(); // Play error sound on failure
       
       // Show error effect (shake)
       setShowErrorEffect(true);
@@ -143,6 +157,8 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
 
   // Reset the game
   const resetGame = () => {
+    playSoundEffect.pop(); // Play pop sound on reset
+    
     // Create scrambled characters from the word
     const shuffled = transformWord(originalWord, 'shuffle');
     setScrambledChars(shuffled);
