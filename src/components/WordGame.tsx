@@ -281,30 +281,29 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: SPACING.xxl,
+    paddingBottom: SPACING.md,
   },
   container: {
     backgroundColor: COLORS.cardBackground,
     borderRadius: RADIUS.large,
-    padding: SPACING.lg,
-    margin: SPACING.md,
-    marginBottom: SPACING.md,
+    padding: SPACING.md,
+    margin: SPACING.sm,
+    marginBottom: SPACING.sm,
     alignItems: 'center',
     ...SHADOWS.medium,
-    // Ensure container has relative positioning for absolute children
     position: 'relative',
     overflow: 'visible',
-    minHeight: SCREEN_HEIGHT * 0.7, // Ensure minimum height for scrolling
+    minHeight: SCREEN_HEIGHT * 0.65,
   },
   contentContainer: {
     width: '100%',
     alignItems: 'center',
-    zIndex: 1, // Lower z-index than effects
+    zIndex: 1,
   },
   imageContainer: {
     width: '100%',
-    height: Math.min(200, SCREEN_HEIGHT * 0.25), // Responsive height
-    marginBottom: SPACING.lg,
+    height: Math.min(160, SCREEN_HEIGHT * 0.2),
+    marginBottom: SPACING.md,
     borderRadius: RADIUS.medium,
     overflow: 'hidden',
     ...SHADOWS.small,
@@ -315,25 +314,25 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   instruction: {
-    fontSize: TYPOGRAPHY.fontSizes.md,
-    marginBottom: SPACING.md,
+    fontSize: TYPOGRAPHY.fontSizes.sm,
+    marginBottom: SPACING.xs,
     textAlign: 'center',
     fontWeight: TYPOGRAPHY.fontWeights.medium,
     color: COLORS.darkText,
   },
   statusContainer: {
-    minHeight: 50,
+    minHeight: 40,
     justifyContent: 'center',
-    marginBottom: SPACING.sm,
-    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
   },
   scrambledContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: SPACING.lg,
-    marginBottom: SPACING.lg,
-    paddingHorizontal: SPACING.sm,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.sm,
+    paddingHorizontal: SPACING.xs,
   },
   wordHintContainer: {
     position: 'absolute',
@@ -341,27 +340,27 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingVertical: SPACING.sm,
+    paddingVertical: SPACING.xs,
   },
   wordHint: {
     color: 'white',
     textAlign: 'center',
-    fontSize: TYPOGRAPHY.fontSizes.lg,
+    fontSize: TYPOGRAPHY.fontSizes.md,
     fontWeight: TYPOGRAPHY.fontWeights.bold,
   },
   resetButton: {
     backgroundColor: COLORS.secondary,
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.sm,
     borderRadius: RADIUS.round,
-    marginTop: SPACING.lg,
-    marginBottom: SPACING.lg,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.sm,
     ...SHADOWS.small,
   },
   resetButtonText: {
     color: 'white',
     fontWeight: TYPOGRAPHY.fontWeights.semibold,
-    fontSize: TYPOGRAPHY.fontSizes.md,
+    fontSize: TYPOGRAPHY.fontSizes.sm,
   }
 });
 

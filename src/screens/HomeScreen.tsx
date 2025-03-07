@@ -46,8 +46,7 @@ const HomeScreen = (): React.JSX.Element => {
       <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Word Wizard</Text>
-          <Text style={styles.subtitle}>Arrange letters to form words</Text>
+          <Text style={styles.title}>Збери слово</Text>
         </View>
         
         <DifficultySelector 
@@ -79,11 +78,11 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: COLORS.primary,
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.xl,
-    paddingHorizontal: SPACING.lg,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
   },
   title: {
     fontSize: TYPOGRAPHY.fontSizes.xxxl,
