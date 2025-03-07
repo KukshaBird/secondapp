@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { transformWord } from '../utils/textTransformations';
 import DraggableCharacter from './DraggableCharacter';
 import WordTargetArea from './WordTargetArea';
@@ -62,7 +62,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
 
   // Handle selecting a character from scrambled area
   const handleCharacterSelect = (index: number) => {
-    if (selectedIndices.includes(index) || nextAvailableSlot >= originalWord.length) {
+    if (selectedIndices.includes(index) || nextAvailableSlot >= originalWord.length || showWinEffect || showErrorEffect) {
       return;
     }
     
@@ -88,7 +88,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
 
   // Handle pressing a target slot
   const handleSlotPress = (index: number) => {
-    if (targetArrangement[index] === null) {
+    if (targetArrangement[index] === null || showWinEffect || showErrorEffect) {
       return;
     }
     
@@ -130,22 +130,14 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       // Show win effect
       setShowWinEffect(true);
       
-      // Show success alert after animation plays for a moment
-      setTimeout(() => {
-        Alert.alert('Success!', 'You arranged the word correctly!', [
-          { text: 'Next', onPress: () => onSuccess && onSuccess() }
-        ]);
-      }, 1000);
+      // Move to next word after animation ends
     } else {
       setGameStatus('failed');
       
       // Show error effect (shake)
       setShowErrorEffect(true);
       
-      // Show error alert
-      Alert.alert('Try Again', 'The arrangement is not correct. Try again!', [
-        { text: 'OK', onPress: resetGame }
-      ]);
+      // Game will be reset after shake animation ends
     }
   };
 
@@ -175,11 +167,17 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
   // Handle when error effect completes
   const handleErrorEffectComplete = () => {
     setShowErrorEffect(false);
+    // No need to show alert, just reset the game
+    resetGame();
   };
 
   // Handle when win effect completes
   const handleWinEffectComplete = () => {
     setShowWinEffect(false);
+    // Move to next word without showing alert
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
@@ -205,8 +203,16 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
         )}
       </View>
       
-      {/* Display the target area where characters will be arranged */}
-      <Text style={styles.instruction}>Arrange the letters to form the correct word:</Text>
+      {/* Game status indicator */}
+      <View style={styles.statusContainer}>
+        <Text style={styles.instruction}>
+          {gameStatus === 'playing' 
+            ? 'Arrange the letters to form the correct word:' 
+            : gameStatus === 'success' 
+              ? 'Great job! You got it right!' 
+              : 'Not quite right. Try again!'}
+        </Text>
+      </View>
       
       <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
         <WordTargetArea 
@@ -229,7 +235,11 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       </View>
       
       {/* Reset button */}
-      <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+      <TouchableOpacity 
+        style={styles.resetButton} 
+        onPress={resetGame}
+        disabled={showWinEffect || showErrorEffect}
+      >
         <Text style={styles.resetButtonText}>Reset</Text>
       </TouchableOpacity>
     </View>
@@ -265,6 +275,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: TYPOGRAPHY.fontWeights.medium,
     color: COLORS.darkText,
+  },
+  statusContainer: {
+    minHeight: 50,
+    justifyContent: 'center',
+    marginBottom: SPACING.sm,
   },
   scrambledContainer: {
     flexDirection: 'row',
