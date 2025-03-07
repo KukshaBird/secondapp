@@ -182,7 +182,62 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Win effect */}
+      {/* Content container */}
+      <View style={styles.contentContainer}>
+        {/* Display the image */}
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: imagePath }} style={styles.image} />
+          
+          {/* Show the word hint if difficulty is easy */}
+          {difficulty === 'easy' && (
+            <View style={styles.wordHintContainer}>
+              <Text style={styles.wordHint}>{originalWord}</Text>
+            </View>
+          )}
+        </View>
+        
+        {/* Game status indicator */}
+        <View style={styles.statusContainer}>
+          <Text style={styles.instruction}>
+            {gameStatus === 'playing' 
+              ? 'Arrange the letters to form the correct word:' 
+              : gameStatus === 'success' 
+                ? 'Great job! You got it right!' 
+                : 'Not quite right. Try again!'}
+          </Text>
+        </View>
+        
+        <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
+          <WordTargetArea 
+            targetSlots={targetArrangement} 
+            onSlotPress={handleSlotPress}
+          />
+        </ShakeView>
+        
+        {/* Display the scrambled characters */}
+        <View style={styles.scrambledContainer}>
+          {scrambledChars.map((char, index) => (
+            <DraggableCharacter
+              key={index}
+              char={char}
+              index={index}
+              onSelect={handleCharacterSelect}
+              isSelected={selectedIndices.includes(index)}
+            />
+          ))}
+        </View>
+        
+        {/* Reset button */}
+        <TouchableOpacity 
+          style={styles.resetButton} 
+          onPress={resetGame}
+          disabled={showWinEffect || showErrorEffect}
+        >
+          <Text style={styles.resetButtonText}>Reset</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {/* Win effect - rendered last so it appears on top */}
       {showWinEffect && (
         <Effects
           type="win"
@@ -190,58 +245,6 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
           onComplete={handleWinEffectComplete}
         />
       )}
-      
-      {/* Display the image */}
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: imagePath }} style={styles.image} />
-        
-        {/* Show the word hint if difficulty is easy */}
-        {difficulty === 'easy' && (
-          <View style={styles.wordHintContainer}>
-            <Text style={styles.wordHint}>{originalWord}</Text>
-          </View>
-        )}
-      </View>
-      
-      {/* Game status indicator */}
-      <View style={styles.statusContainer}>
-        <Text style={styles.instruction}>
-          {gameStatus === 'playing' 
-            ? 'Arrange the letters to form the correct word:' 
-            : gameStatus === 'success' 
-              ? 'Great job! You got it right!' 
-              : 'Not quite right. Try again!'}
-        </Text>
-      </View>
-      
-      <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
-        <WordTargetArea 
-          targetSlots={targetArrangement} 
-          onSlotPress={handleSlotPress}
-        />
-      </ShakeView>
-      
-      {/* Display the scrambled characters */}
-      <View style={styles.scrambledContainer}>
-        {scrambledChars.map((char, index) => (
-          <DraggableCharacter
-            key={index}
-            char={char}
-            index={index}
-            onSelect={handleCharacterSelect}
-            isSelected={selectedIndices.includes(index)}
-          />
-        ))}
-      </View>
-      
-      {/* Reset button */}
-      <TouchableOpacity 
-        style={styles.resetButton} 
-        onPress={resetGame}
-        disabled={showWinEffect || showErrorEffect}
-      >
-        <Text style={styles.resetButtonText}>Reset</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -255,6 +258,14 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xxl,
     alignItems: 'center',
     ...SHADOWS.medium,
+    // Ensure container has relative positioning for absolute children
+    position: 'relative',
+    overflow: 'visible',
+  },
+  contentContainer: {
+    width: '100%',
+    alignItems: 'center',
+    zIndex: 1, // Lower z-index than effects
   },
   imageContainer: {
     width: '100%',

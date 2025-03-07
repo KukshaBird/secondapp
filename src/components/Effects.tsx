@@ -163,7 +163,14 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000,
+    zIndex: 9999,
+    elevation: 10,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pointerEvents: 'none',
   },
   balloon: {
     position: 'absolute',
@@ -171,6 +178,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     bottom: -30,
+    zIndex: 9999,
   },
 });
 
