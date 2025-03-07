@@ -6,6 +6,8 @@ import WordTargetArea from './WordTargetArea';
 import { WordGameProps, GameStatus } from '../types';
 import { Difficulty } from './DifficultySelector';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants';
+import Effects from './Effects';
+import ShakeView from './ShakeView';
 
 interface ExtendedWordGameProps extends WordGameProps {
   difficulty?: Difficulty;
@@ -30,6 +32,10 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
   const [nextAvailableSlot, setNextAvailableSlot] = useState(0);
   // Game status
   const [gameStatus, setGameStatus] = useState<GameStatus>('playing');
+  
+  // Animation states
+  const [showWinEffect, setShowWinEffect] = useState(false);
+  const [showErrorEffect, setShowErrorEffect] = useState(false);
 
   // Initialize the game
   useEffect(() => {
@@ -48,6 +54,10 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     
     // Reset game status
     setGameStatus('playing');
+    
+    // Reset animations
+    setShowWinEffect(false);
+    setShowErrorEffect(false);
   }, [originalWord]);
 
   // Handle selecting a character from scrambled area
@@ -116,11 +126,23 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     
     if (arrangedWord === originalWord) {
       setGameStatus('success');
-      Alert.alert('Success!', 'You arranged the word correctly!', [
-        { text: 'Next', onPress: () => onSuccess && onSuccess() }
-      ]);
+      
+      // Show win effect
+      setShowWinEffect(true);
+      
+      // Show success alert after animation plays for a moment
+      setTimeout(() => {
+        Alert.alert('Success!', 'You arranged the word correctly!', [
+          { text: 'Next', onPress: () => onSuccess && onSuccess() }
+        ]);
+      }, 1000);
     } else {
       setGameStatus('failed');
+      
+      // Show error effect (shake)
+      setShowErrorEffect(true);
+      
+      // Show error alert
       Alert.alert('Try Again', 'The arrangement is not correct. Try again!', [
         { text: 'OK', onPress: resetGame }
       ]);
@@ -144,10 +166,33 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     
     // Reset game status
     setGameStatus('playing');
+    
+    // Reset animations
+    setShowWinEffect(false);
+    setShowErrorEffect(false);
+  };
+
+  // Handle when error effect completes
+  const handleErrorEffectComplete = () => {
+    setShowErrorEffect(false);
+  };
+
+  // Handle when win effect completes
+  const handleWinEffectComplete = () => {
+    setShowWinEffect(false);
   };
 
   return (
     <View style={styles.container}>
+      {/* Win effect */}
+      {showWinEffect && (
+        <Effects
+          type="win"
+          duration={3000}
+          onComplete={handleWinEffectComplete}
+        />
+      )}
+      
       {/* Display the image */}
       <View style={styles.imageContainer}>
         <Image source={{ uri: imagePath }} style={styles.image} />
@@ -162,10 +207,13 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       
       {/* Display the target area where characters will be arranged */}
       <Text style={styles.instruction}>Arrange the letters to form the correct word:</Text>
-      <WordTargetArea 
-        targetSlots={targetArrangement} 
-        onSlotPress={handleSlotPress}
-      />
+      
+      <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
+        <WordTargetArea 
+          targetSlots={targetArrangement} 
+          onSlotPress={handleSlotPress}
+        />
+      </ShakeView>
       
       {/* Display the scrambled characters */}
       <View style={styles.scrambledContainer}>

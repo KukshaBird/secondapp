@@ -6,4 +6,7 @@ export { default as DraggableCharacter } from './DraggableCharacter';
 export { default as WordTargetArea } from './WordTargetArea';
 export { default as WordGame } from './WordGame';
 export { default as DifficultySelector } from './DifficultySelector';
-export type { Difficulty } from './DifficultySelector'; 
+export { default as Effects } from './Effects';
+export { default as ShakeView } from './ShakeView';
+export type { Difficulty } from './DifficultySelector';
+export type { EffectType } from './Effects'; 
