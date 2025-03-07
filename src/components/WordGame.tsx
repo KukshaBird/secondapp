@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { transformWord } from '../utils/textTransformations';
 import DraggableCharacter from './DraggableCharacter';
 import WordTargetArea from './WordTargetArea';
@@ -14,6 +14,9 @@ interface ExtendedWordGameProps extends WordGameProps {
   difficulty?: Difficulty;
 }
 
+// Get screen dimensions
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 const WordGame: React.FC<ExtendedWordGameProps> = ({
   word,
   imagePath = 'https://images.unsplash.com/photo-1553095066-5014bc7b7f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
@@ -21,7 +24,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
   difficulty = 'hard'
 }) => {
   // Original word
-  const originalWord = word.toLowerCase();
+  const originalWord = useMemo(() => word.toLowerCase(), [word]);
   
   // State for scrambled characters
   const [scrambledChars, setScrambledChars] = useState<string[]>([]);
@@ -38,8 +41,8 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
   const [showWinEffect, setShowWinEffect] = useState(false);
   const [showErrorEffect, setShowErrorEffect] = useState(false);
 
-  // Initialize the game
-  useEffect(() => {
+  // Initialize the game - memoized to prevent unnecessary re-renders
+  const initializeGame = useCallback(() => {
     // Create scrambled characters from the word
     const shuffled = transformWord(originalWord, 'shuffle');
     setScrambledChars(shuffled);
@@ -61,15 +64,20 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     setShowErrorEffect(false);
   }, [originalWord]);
 
+  // Initialize on mount and when word changes
+  useEffect(() => {
+    initializeGame();
+  }, [initializeGame]);
+
+  // Cleanup sounds on unmount
   useEffect(() => {
     return () => {
-      // Cleanup sounds when component unmounts
       releaseSounds();
     };
   }, []);
 
-  // Handle selecting a character from scrambled area
-  const handleCharacterSelect = (index: number) => {
+  // Handle selecting a character from scrambled area - memoized to prevent recreating on each render
+  const handleCharacterSelect = useCallback((index: number) => {
     if (selectedIndices.includes(index) || nextAvailableSlot >= originalWord.length || showWinEffect || showErrorEffect) {
       return;
     }
@@ -77,27 +85,30 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     playSoundEffect.pop(); // Play pop sound when selecting a character
     
     // Mark this character as selected
-    setSelectedIndices([...selectedIndices, index]);
+    setSelectedIndices(prevIndices => [...prevIndices, index]);
     
     // Add the character to the next available slot
-    const newTargetArrangement = [...targetArrangement];
-    newTargetArrangement[nextAvailableSlot] = scrambledChars[index];
-    setTargetArrangement(newTargetArrangement);
+    setTargetArrangement(prevArrangement => {
+      const newArrangement = [...prevArrangement];
+      newArrangement[nextAvailableSlot] = scrambledChars[index];
+      
+      // Check if all slots are filled after this update
+      if (nextAvailableSlot === originalWord.length - 1) {
+        // All slots filled, check if the arrangement is correct
+        setTimeout(() => {
+          checkResult([...newArrangement]);
+        }, 300);
+      }
+      
+      return newArrangement;
+    });
     
     // Update next available slot
-    setNextAvailableSlot(nextAvailableSlot + 1);
-    
-    // Check if all slots are filled
-    if (nextAvailableSlot === originalWord.length - 1) {
-      // All slots filled, check if the arrangement is correct
-      setTimeout(() => {
-        checkResult([...newTargetArrangement]);
-      }, 300);
-    }
-  };
+    setNextAvailableSlot(prevSlot => prevSlot + 1);
+  }, [selectedIndices, nextAvailableSlot, originalWord.length, showWinEffect, showErrorEffect, scrambledChars]);
 
-  // Handle pressing a target slot
-  const handleSlotPress = (index: number) => {
+  // Handle pressing a target slot - memoized
+  const handleSlotPress = useCallback((index: number) => {
     if (targetArrangement[index] === null || showWinEffect || showErrorEffect) {
       return;
     }
@@ -112,28 +123,30 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     
     if (originalIndex !== -1) {
       // Remove this character from selected indices
-      setSelectedIndices(selectedIndices.filter(idx => idx !== originalIndex));
+      setSelectedIndices(prevIndices => prevIndices.filter(idx => idx !== originalIndex));
       
-      // Remove the character from the target arrangement
-      const newTargetArrangement = [...targetArrangement];
-      
-      // Shift all characters after the removed one
-      for (let i = index; i < newTargetArrangement.length - 1; i++) {
-        newTargetArrangement[i] = newTargetArrangement[i + 1];
-      }
-      
-      // Set the last slot to null
-      newTargetArrangement[newTargetArrangement.length - 1] = null;
-      
-      setTargetArrangement(newTargetArrangement);
+      // Update target arrangement
+      setTargetArrangement(prevArrangement => {
+        const newArrangement = [...prevArrangement];
+        
+        // Shift all characters after the removed one
+        for (let i = index; i < newArrangement.length - 1; i++) {
+          newArrangement[i] = newArrangement[i + 1];
+        }
+        
+        // Set the last slot to null
+        newArrangement[newArrangement.length - 1] = null;
+        
+        return newArrangement;
+      });
       
       // Update next available slot
-      setNextAvailableSlot(Math.max(0, nextAvailableSlot - 1));
+      setNextAvailableSlot(prevSlot => Math.max(0, prevSlot - 1));
     }
-  };
+  }, [targetArrangement, showWinEffect, showErrorEffect, scrambledChars, selectedIndices]);
 
-  // Check if the arranged word matches the original
-  const checkResult = (arrangement: Array<string | null>) => {
+  // Check if the arranged word matches the original - memoized
+  const checkResult = useCallback((arrangement: Array<string | null>) => {
     const arrangedWord = arrangement.join('');
     
     if (arrangedWord === originalWord) {
@@ -142,141 +155,146 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
       
       // Show win effect
       setShowWinEffect(true);
-      
-      // Move to next word after animation ends
     } else {
       setGameStatus('failed');
       playSoundEffect.error(); // Play error sound on failure
       
       // Show error effect (shake)
       setShowErrorEffect(true);
-      
-      // Game will be reset after shake animation ends
     }
-  };
+  }, [originalWord]);
 
-  // Reset the game
-  const resetGame = () => {
+  // Reset the game - memoized
+  const resetGame = useCallback(() => {
     playSoundEffect.pop(); // Play pop sound on reset
-    
-    // Create scrambled characters from the word
-    const shuffled = transformWord(originalWord, 'shuffle');
-    setScrambledChars(shuffled);
-    
-    // Reset the target arrangement with empty slots
-    setTargetArrangement(Array(originalWord.length).fill(null));
-    
-    // Reset selected indices
-    setSelectedIndices([]);
-    
-    // Reset next available slot
-    setNextAvailableSlot(0);
-    
-    // Reset game status
-    setGameStatus('playing');
-    
-    // Reset animations
-    setShowWinEffect(false);
-    setShowErrorEffect(false);
-  };
+    initializeGame();
+  }, [initializeGame]);
 
-  // Handle when error effect completes
-  const handleErrorEffectComplete = () => {
+  // Handle when error effect completes - memoized
+  const handleErrorEffectComplete = useCallback(() => {
     setShowErrorEffect(false);
-    // No need to show alert, just reset the game
     resetGame();
-  };
+  }, [resetGame]);
 
-  // Handle when win effect completes
-  const handleWinEffectComplete = () => {
+  // Handle when win effect completes - memoized
+  const handleWinEffectComplete = useCallback(() => {
     setShowWinEffect(false);
-    // Move to next word without showing alert
     if (onSuccess) {
       onSuccess();
     }
-  };
+  }, [onSuccess]);
+
+  // Memoize the scrambled characters rendering to prevent unnecessary re-renders
+  const scrambledCharactersSection = useMemo(() => (
+    <View style={styles.scrambledContainer}>
+      {scrambledChars.map((char, index) => (
+        <DraggableCharacter
+          key={index}
+          char={char}
+          index={index}
+          onSelect={handleCharacterSelect}
+          isSelected={selectedIndices.includes(index)}
+        />
+      ))}
+    </View>
+  ), [scrambledChars, selectedIndices, handleCharacterSelect]);
+
+  // Memoize the target area to prevent unnecessary re-renders
+  const targetAreaSection = useMemo(() => (
+    <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
+      <WordTargetArea 
+        targetSlots={targetArrangement} 
+        onSlotPress={handleSlotPress}
+      />
+    </ShakeView>
+  ), [targetArrangement, showErrorEffect, handleErrorEffectComplete, handleSlotPress]);
 
   return (
-    <View style={styles.container}>
-      {/* Content container */}
-      <View style={styles.contentContainer}>
-        {/* Display the image */}
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: imagePath }} style={styles.image} />
-          
-          {/* Show the word hint if difficulty is easy */}
-          {difficulty === 'easy' && (
-            <View style={styles.wordHintContainer}>
-              <Text style={styles.wordHint}>{originalWord}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={true}
+        bounces={false}
+      >
+        <View style={styles.container}>
+          {/* Content container */}
+          <View style={styles.contentContainer}>
+            {/* Display the image */}
+            <View style={styles.imageContainer}>
+              <Image 
+                source={{ uri: imagePath }} 
+                style={styles.image}
+                resizeMethod="resize"
+              />
+              
+              {/* Show the word hint if difficulty is easy */}
+              {difficulty === 'easy' && (
+                <View style={styles.wordHintContainer}>
+                  <Text style={styles.wordHint}>{originalWord}</Text>
+                </View>
+              )}
             </View>
+            
+            {/* Game status indicator */}
+            <View style={styles.statusContainer}>
+              <Text style={styles.instruction}>
+                {gameStatus === 'playing' 
+                  ? 'Arrange the letters to form the correct word:' 
+                  : gameStatus === 'success' 
+                    ? 'Great job! You got it right!' 
+                    : 'Not quite right. Try again!'}
+              </Text>
+            </View>
+            
+            {targetAreaSection}
+            
+            {scrambledCharactersSection}
+            
+            {/* Reset button */}
+            <TouchableOpacity 
+              style={styles.resetButton} 
+              onPress={resetGame}
+              disabled={showWinEffect || showErrorEffect}
+            >
+              <Text style={styles.resetButtonText}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+          
+          {/* Win effect - rendered last so it appears on top */}
+          {showWinEffect && (
+            <Effects
+              type="win"
+              duration={3000}
+              onComplete={handleWinEffectComplete}
+            />
           )}
         </View>
-        
-        {/* Game status indicator */}
-        <View style={styles.statusContainer}>
-          <Text style={styles.instruction}>
-            {gameStatus === 'playing' 
-              ? 'Arrange the letters to form the correct word:' 
-              : gameStatus === 'success' 
-                ? 'Great job! You got it right!' 
-                : 'Not quite right. Try again!'}
-          </Text>
-        </View>
-        
-        <ShakeView shake={showErrorEffect} onComplete={handleErrorEffectComplete}>
-          <WordTargetArea 
-            targetSlots={targetArrangement} 
-            onSlotPress={handleSlotPress}
-          />
-        </ShakeView>
-        
-        {/* Display the scrambled characters */}
-        <View style={styles.scrambledContainer}>
-          {scrambledChars.map((char, index) => (
-            <DraggableCharacter
-              key={index}
-              char={char}
-              index={index}
-              onSelect={handleCharacterSelect}
-              isSelected={selectedIndices.includes(index)}
-            />
-          ))}
-        </View>
-        
-        {/* Reset button */}
-        <TouchableOpacity 
-          style={styles.resetButton} 
-          onPress={resetGame}
-          disabled={showWinEffect || showErrorEffect}
-        >
-          <Text style={styles.resetButtonText}>Reset</Text>
-        </TouchableOpacity>
-      </View>
-      
-      {/* Win effect - rendered last so it appears on top */}
-      {showWinEffect && (
-        <Effects
-          type="win"
-          duration={3000}
-          onComplete={handleWinEffectComplete}
-        />
-      )}
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: SPACING.xxl,
+  },
   container: {
     backgroundColor: COLORS.cardBackground,
     borderRadius: RADIUS.large,
     padding: SPACING.lg,
     margin: SPACING.md,
-    marginBottom: SPACING.xxl,
+    marginBottom: SPACING.md,
     alignItems: 'center',
     ...SHADOWS.medium,
     // Ensure container has relative positioning for absolute children
     position: 'relative',
     overflow: 'visible',
+    minHeight: SCREEN_HEIGHT * 0.7, // Ensure minimum height for scrolling
   },
   contentContainer: {
     width: '100%',
@@ -285,7 +303,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    height: Math.min(200, SCREEN_HEIGHT * 0.25), // Responsive height
     marginBottom: SPACING.lg,
     borderRadius: RADIUS.medium,
     overflow: 'hidden',
@@ -307,6 +325,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     justifyContent: 'center',
     marginBottom: SPACING.sm,
+    paddingHorizontal: SPACING.md,
   },
   scrambledContainer: {
     flexDirection: 'row',
@@ -314,6 +333,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: SPACING.lg,
     marginBottom: SPACING.lg,
+    paddingHorizontal: SPACING.sm,
   },
   wordHintContainer: {
     position: 'absolute',
@@ -334,6 +354,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
     borderRadius: RADIUS.round,
+    marginTop: SPACING.lg,
+    marginBottom: SPACING.lg,
     ...SHADOWS.small,
   },
   resetButtonText: {
