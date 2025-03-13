@@ -30,7 +30,7 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
   },
   {
     word: 'тигр',
-    image: 'https://images.unsplash.com/photo-1549366021-9f761d450615?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+    image: 'https://images.unsplash.com/photo-1549480017-d76466a4b7e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     word: 'лев',
@@ -38,7 +38,7 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
   },
   {
     word: 'сова',
-    image: 'https://images.unsplash.com/photo-1579571373417-84dfe769bcbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+    image: 'https://images.unsplash.com/photo-1543549790-8b5f4a028cfb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     word: 'лисиця',
@@ -46,6 +46,6 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
   },
   {
     word: 'вовк',
-    image: 'https://images.unsplash.com/photo-1564352969906-8b7f46a0a43b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+    image: 'https://images.unsplash.com/photo-1552330173-39dd43b264b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   }
 ]; 

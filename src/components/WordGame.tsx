@@ -224,6 +224,7 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
               <Image 
                 source={{ uri: imagePath }} 
                 style={styles.image}
+                resizeMode="cover"
                 resizeMethod="resize"
               />
               
@@ -302,10 +303,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: Math.min(160, SCREEN_HEIGHT * 0.2),
+    height: Math.min(200, SCREEN_HEIGHT * 0.25),
     marginBottom: SPACING.md,
     borderRadius: RADIUS.medium,
     overflow: 'hidden',
+    backgroundColor: COLORS.background,
     ...SHADOWS.small,
   },
   image: {
