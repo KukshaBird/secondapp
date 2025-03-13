@@ -17,7 +17,7 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
     image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' 
   },
   { 
-    word: 'птиця', 
+    word: 'птаха', 
     image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' 
   },
   { 
@@ -41,7 +41,7 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
     image: 'https://images.unsplash.com/photo-1579571373417-84dfe769bcbc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
   },
   {
-    word: 'лиса',
+    word: 'лисиця',
     image: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
   },
   {
