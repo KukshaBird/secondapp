@@ -38,11 +38,11 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
   },
   {
     word: 'сова',
-    image: 'https://images.unsplash.com/photo-1543549790-8b5f4a028cfb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1467811884194-ae868cd3f090?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     word: 'лисиця',
-    image: 'https://images.unsplash.com/photo-1516934024742-b461fba47600?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+    image: 'https://images.unsplash.com/photo-1578170681526-de18d598a5b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     word: 'вовк',
