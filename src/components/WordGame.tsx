@@ -177,8 +177,12 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
   // Handle when win effect completes - memoized
   const handleWinEffectComplete = useCallback(() => {
     setShowWinEffect(false);
-    // Don't automatically move to next word - wait for Next button press
-  }, []);
+    
+    // Automatically move to the next word when animation completes
+    if (onSuccess) {
+      onSuccess();
+    }
+  }, [onSuccess]);
 
   // Handle when error effect completes - memoized
   const handleErrorEffectComplete = useCallback(() => {
@@ -256,13 +260,12 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
             {/* Next button */}
             <TouchableOpacity 
               style={[
-                styles.actionButton, 
-                gameStatus === 'success' ? styles.nextButton : styles.actionButton
+                styles.actionButton
               ]} 
               onPress={handleNextWord}
               disabled={showWinEffect || showErrorEffect}
             >
-              <Text style={styles.buttonText}>Next</Text>
+              <Text style={styles.buttonText}>Далі</Text>
             </TouchableOpacity>
           </View>
           
