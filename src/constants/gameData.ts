@@ -46,6 +46,6 @@ export const WORD_IMAGE_PAIRS: WordImagePair[] = [
   },
   {
     word: 'вовк',
-    image: 'https://images.unsplash.com/photo-1552330173-39dd43b264b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1607350999170-b893fef057ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
   }
 ]; 

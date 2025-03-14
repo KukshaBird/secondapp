@@ -164,25 +164,27 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
     }
   }, [originalWord]);
 
-  // Reset the game - memoized
-  const resetGame = useCallback(() => {
-    playSoundEffect.pop(); // Play pop sound on reset
-    initializeGame();
-  }, [initializeGame]);
-
-  // Handle when error effect completes - memoized
-  const handleErrorEffectComplete = useCallback(() => {
-    setShowErrorEffect(false);
-    resetGame();
-  }, [resetGame]);
+  // Handle next word - memoized
+  const handleNextWord = useCallback(() => {
+    playSoundEffect.pop(); // Play pop sound when moving to next word
+    
+    // Always move to the next word regardless of game state
+    if (onSuccess) {
+      onSuccess(); // This will trigger the parent component to move to the next word
+    }
+  }, [onSuccess]);
 
   // Handle when win effect completes - memoized
   const handleWinEffectComplete = useCallback(() => {
     setShowWinEffect(false);
-    if (onSuccess) {
-      onSuccess();
-    }
-  }, [onSuccess]);
+    // Don't automatically move to next word - wait for Next button press
+  }, []);
+
+  // Handle when error effect completes - memoized
+  const handleErrorEffectComplete = useCallback(() => {
+    setShowErrorEffect(false);
+    // Don't reset automatically
+  }, []);
 
   // Memoize the scrambled characters rendering to prevent unnecessary re-renders
   const scrambledCharactersSection = useMemo(() => (
@@ -251,13 +253,16 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
             
             {scrambledCharactersSection}
             
-            {/* Reset button */}
+            {/* Next button */}
             <TouchableOpacity 
-              style={styles.resetButton} 
-              onPress={resetGame}
+              style={[
+                styles.actionButton, 
+                gameStatus === 'success' ? styles.nextButton : styles.actionButton
+              ]} 
+              onPress={handleNextWord}
               disabled={showWinEffect || showErrorEffect}
             >
-              <Text style={styles.resetButtonText}>Reset</Text>
+              <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </View>
           
@@ -350,7 +355,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.fontSizes.md,
     fontWeight: TYPOGRAPHY.fontWeights.bold,
   },
-  resetButton: {
+  actionButton: {
     backgroundColor: COLORS.secondary,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
@@ -359,7 +364,10 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
     ...SHADOWS.small,
   },
-  resetButtonText: {
+  nextButton: {
+    backgroundColor: COLORS.primary,
+  },
+  buttonText: {
     color: 'white',
     fontWeight: TYPOGRAPHY.fontWeights.semibold,
     fontSize: TYPOGRAPHY.fontSizes.sm,
