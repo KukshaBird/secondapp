@@ -12,13 +12,12 @@ import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
 import WordsService from "../services/words.service.ts";
 import { WordsRepository } from "../repository/words.repository.ts";
 import { styles } from "./styles.ts";
+import { AdminPanel } from "../components/AdminPage";
 
 
 const AdminPanelScreen = (): React.JSX.Element => {
     const persistor = new ImagePersistorService();
-    // Current word-image pair index
     const [data, setData] = useState<Word[]>([]);
-
     const { isConnecting, db } = useConnectDatabase();
 
 
@@ -56,7 +55,6 @@ const AdminPanelScreen = (): React.JSX.Element => {
             const wordService = new WordsService(wordsRepository)
             const getAllWords = async () => {
                 const words = await wordService.getWords();
-                console.log(words);
                 setData(words);
             }
             getAllWords().then();
@@ -67,6 +65,8 @@ const AdminPanelScreen = (): React.JSX.Element => {
         return <Text>Connecting...</Text>;
     }
 
+    console.log(data)
+
     return (
         <>
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
@@ -74,6 +74,8 @@ const AdminPanelScreen = (): React.JSX.Element => {
                 <View style={styles.header}>
                     <Text style={styles.title}>Управління картками</Text>
                 </View>
+
+                {data.length > 0 ? <AdminPanel data={data} /> : <Text>No data available</Text>}
             </SafeAreaView>
         </>
     );
