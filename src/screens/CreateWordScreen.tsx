@@ -1,0 +1,73 @@
+import React, { useEffect } from 'react';
+import {
+    View,
+    Text,
+    StatusBar,
+    SafeAreaView,
+} from 'react-native';
+import { CreateWordDto, Word } from "../types/word.types.ts";
+import { COLORS } from "../constants";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App.tsx";
+import { WordsRepository } from "../repository/words.repository.ts";
+import WordsService from "../services/words.service.ts";
+import { styles } from "./styles.ts";
+import { WordForm } from "../components/AdminPage";
+import ImagePersistorService from "../services/ImagePersistor.service.ts";
+import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
+
+type CreateWordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WordForm'>;
+
+interface WordFormProps {
+    navigation: CreateWordScreenNavigationProp
+}
+
+export const WordFormScreen = ({ navigation }: WordFormProps) => {
+    const persistor = new ImagePersistorService();
+    const { db, isConnecting } = useConnectDatabase();
+
+    const handleSubmit = async (values: CreateWordDto) => {
+        // Persist (copy) img from values img path;
+        const newPath = await persistor.saveImage(values.img, values.word);
+        // Update values;
+        const newValues: CreateWordDto = {
+            word: values.word,
+            img: newPath,
+            collectionIds: values.collectionIds,
+        }
+
+        // Save word
+        if (db) {
+            const wordsRepository = new WordsRepository(db);
+            const wordService = new WordsService(wordsRepository)
+            const createWord = async () => {
+                await wordService.create(newValues);
+                navigation.navigate('Admin')
+            }
+            createWord().then();
+        }
+    }
+
+    useEffect(() => {
+        // Initialize the image persistor
+        persistor.ensureInitialized().catch(console.error);
+    }, []);
+
+    if (isConnecting) {
+        return <Text>Connecting...</Text>;
+    }
+
+    return (
+        <>
+            <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
+            <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Створити нову картку</Text>
+                </View>
+                <View>
+                    <WordForm onSubmit={handleSubmit} collections={[]} />
+                </View>
+            </SafeAreaView>
+        </>
+    )
+};

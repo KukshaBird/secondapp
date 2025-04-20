@@ -51,6 +51,16 @@ export const styles = StyleSheet.create({
         maxWidth: 300,
         elevation: 3,
     },
+    smallButton: {
+        backgroundColor: COLORS.primary,
+        marginVertical: SPACING.sm,
+        paddingVertical: SPACING.xs,
+        paddingHorizontal: SPACING.sm,
+        borderRadius: 12,
+        width: '100%',
+        maxWidth: 200,
+        elevation: 3,
+    },
     buttonText: {
         color: 'white',
         fontSize: TYPOGRAPHY.fontSizes.xl,

@@ -3,51 +3,27 @@ import {
     SafeAreaView,
     Text,
     View,
-    StatusBar,
+    StatusBar, TouchableOpacity,
 } from 'react-native';
 import { COLORS } from '../constants';
-import { CreateWordDto, Word } from "../types/word.types.ts";
-import ImagePersistorService from "../services/ImagePersistor.service.ts";
+import { Word } from "../types/word.types.ts";
 import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
 import WordsService from "../services/words.service.ts";
 import { WordsRepository } from "../repository/words.repository.ts";
 import { styles } from "./styles.ts";
 import { AdminPanel } from "../components/AdminPage";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App.tsx";
 
+type AdminPanelScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Admin'>;
 
-const AdminPanelScreen = (): React.JSX.Element => {
-    const persistor = new ImagePersistorService();
+interface Props {
+    navigation: AdminPanelScreenNavigationProp;
+}
+
+const AdminPanelScreen = ({navigation}: Props): React.JSX.Element => {
     const [data, setData] = useState<Word[]>([]);
     const { isConnecting, db } = useConnectDatabase();
-
-
-    const handleSubmit = async (values: CreateWordDto) => {
-        // Persist (copy) img from values img path;
-        const newPath = await persistor.saveImage(values.img, values.word);
-        // Update values;
-        const newValues: CreateWordDto = {
-            word: values.word,
-            img: newPath,
-            collectionIds: values.collectionIds,
-        }
-
-        // Save word
-        if (db) {
-            const wordsRepository = new WordsRepository(db);
-            const wordService = new WordsService(wordsRepository)
-            const createWord = async () => {
-                const newWord = await wordService.create(newValues);
-                setData([...data, newWord]);
-            }
-            createWord().then();
-        }
-    }
-
-    useEffect(() => {
-        // Initialize the image persistor
-        persistor.ensureInitialized().catch(console.error);
-    }, []);
-
 
     useEffect(() => {
         if (db) {
@@ -65,8 +41,6 @@ const AdminPanelScreen = (): React.JSX.Element => {
         return <Text>Connecting...</Text>;
     }
 
-    console.log(data)
-
     return (
         <>
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
@@ -74,6 +48,12 @@ const AdminPanelScreen = (): React.JSX.Element => {
                 <View style={styles.header}>
                     <Text style={styles.title}>Управління картками</Text>
                 </View>
+                <TouchableOpacity
+                    style={styles.smallButton}
+                    onPress={() => navigation.navigate('WordForm')}
+                >
+                    <Text style={styles.buttonText}>Створити Картку</Text>
+                </TouchableOpacity>
 
                 {data.length > 0 ? <AdminPanel data={data} /> : <Text>No data available</Text>}
             </SafeAreaView>
