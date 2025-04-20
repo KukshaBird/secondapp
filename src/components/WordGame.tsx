@@ -228,7 +228,10 @@ const WordGame: React.FC<ExtendedWordGameProps> = ({
             {/* Display the image */}
             <View style={styles.imageContainer}>
               <Image 
-                source={{ uri: imagePath }} 
+                source={{ uri: imagePath.startsWith('http')
+                      ? imagePath
+                      : `file://${imagePath}`
+                }}
                 style={styles.image}
                 resizeMode="cover"
                 resizeMethod="resize"
