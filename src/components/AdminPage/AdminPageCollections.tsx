@@ -39,9 +39,9 @@ export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) 
             <SafeAreaView style={styles.container}>
                 <TouchableOpacity
                     style={styles.smallButton}
-                    onPress={() => navigation.navigate('Collections')}
+                    onPress={() => navigation.navigate('CollectionForm')}
                 >
-                    <Text style={styles.buttonText}>Створити Картку</Text>
+                    <Text style={styles.buttonText}>Створити Колекцію</Text>
                 </TouchableOpacity>
                 <CollectionList data={collections} />
             </SafeAreaView>

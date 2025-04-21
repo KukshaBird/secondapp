@@ -24,17 +24,12 @@ interface CollectionFormProps {
 export const CollectionFormScreen = ({ navigation }: CollectionFormProps) => {
     const { db, isConnecting } = useConnectDatabase();
 
-    const handleSubmit = async (values: CreateCollectionDto) => {
-
-        // Save word
+    const handleSubmit = async (data: CreateCollectionDto) => {
         if (db) {
             const collectionsRepository = new CollectionsRepository(db);
             const collectionsService = new CollectionsService(collectionsRepository)
-            const createCollection = async () => {
-                await collectionsService.create(values);
-                navigation.navigate('Collections')
-            }
-            createCollection().then();
+            await collectionsService.create(data);
+            navigation.navigate('Collections')
         }
     }
 
@@ -47,7 +42,7 @@ export const CollectionFormScreen = ({ navigation }: CollectionFormProps) => {
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>Створити нову картку</Text>
+                    <Text style={styles.title}>Створити нову колекцію</Text>
                 </View>
                 <View>
                     <CollectionForm onSubmit={handleSubmit}/>
