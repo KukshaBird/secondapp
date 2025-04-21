@@ -8,15 +8,15 @@ import {
 import { CreateWordDto, Word } from "../types/word.types.ts";
 import { COLORS } from "../constants";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App.tsx";
 import { WordsRepository } from "../repository/words.repository.ts";
 import WordsService from "../services/words.service.ts";
 import { styles } from "./styles.ts";
 import { WordForm } from "../components/AdminPage";
 import ImagePersistorService from "../services/ImagePersistor.service.ts";
 import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
+import { AdminStackParamList } from "./AdminPanelScreen.tsx";
 
-type CreateWordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WordForm'>;
+type CreateWordScreenNavigationProp = NativeStackNavigationProp<AdminStackParamList, 'WordForm'>;
 
 interface WordFormProps {
     navigation: CreateWordScreenNavigationProp
@@ -42,7 +42,7 @@ export const WordFormScreen = ({ navigation }: WordFormProps) => {
             const wordService = new WordsService(wordsRepository)
             const createWord = async () => {
                 await wordService.create(newValues);
-                navigation.navigate('Admin')
+                navigation.navigate('Words')
             }
             createWord().then();
         }
