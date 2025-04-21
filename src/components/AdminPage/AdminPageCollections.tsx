@@ -33,6 +33,17 @@ export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) 
         }
     }, [db, isConnecting]);
 
+    const handleDelete = (id: number) => {
+        if (db) {
+            const collectionsRepository = new CollectionsRepository(db);
+            const collectionsService = new CollectionsService(collectionsRepository);
+            collectionsService.delete(id).then(() => {
+                const newCollections = collections.filter(c => c.id !== id);
+                setCollections(newCollections);
+            });
+        }
+    }
+
     return (
         <>
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
@@ -43,7 +54,7 @@ export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) 
                 >
                     <Text style={styles.buttonText}>Створити Колекцію</Text>
                 </TouchableOpacity>
-                <CollectionList data={collections} />
+                <CollectionList data={collections} onDelete={handleDelete} />
             </SafeAreaView>
         </>
     );

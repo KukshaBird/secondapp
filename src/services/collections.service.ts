@@ -13,6 +13,10 @@ class CollectionsService {
     public async getCollections() {
         return this.collectionsRepository.getAll();
     }
+
+    public async delete(id: number) {
+        return this.collectionsRepository.delete(id);
+    }
 }
 
 export default CollectionsService;
