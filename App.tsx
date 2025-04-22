@@ -10,12 +10,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/screens/HomeScreen';
 import AdminPanelScreen from './src/screens/AdminPanelScreen';
-import WordCardScreen from './src/screens/WordCardScreen';
+import CardGameScreen from './src/screens/CardGameScreen.tsx';
 
 export type RootStackParamList = {
   Home: undefined;
   Admin: undefined;
-  WordCard: undefined;
+  CardGame: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,7 +37,7 @@ function App(): React.JSX.Element {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Admin" component={AdminPanelScreen} />
-      <Stack.Screen name="WordCard" component={WordCardScreen} />
+      <Stack.Screen name="CardGame" component={CardGameScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 

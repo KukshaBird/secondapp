@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }: Props): React.JSX.Element => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('WordCard')}
+              onPress={() => navigation.navigate('CardGame')}
           >
             <Text style={styles.buttonText}>Грати</Text>
           </TouchableOpacity>

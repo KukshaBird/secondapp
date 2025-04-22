@@ -17,7 +17,7 @@ import { WordsRepository } from "../repository/words.repository.ts";
 import { styles } from "./styles.ts";
 
 
-const WordCardScreen = (): React.JSX.Element => {
+const CardGameScreen = (): React.JSX.Element => {
     // Current word-image pair index
     const [data, setData] = useState<Word[]>([]);
     const [currentPairIndex, setCurrentPairIndex] = useState<number>(0);
@@ -97,4 +97,4 @@ const WordCardScreen = (): React.JSX.Element => {
     );
 };
 
-export default WordCardScreen;
+export default CardGameScreen;
