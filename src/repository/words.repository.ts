@@ -97,20 +97,34 @@ export class WordsRepository {
         }
     }
 
-    async getAll(): Promise<Word[]> {
+    async getAll(collectionId?: number): Promise<Word[]> {
         try {
-            const [wordsResult] = await this.db.executeSql(`
-                SELECT 
-                    w.id,
-                    w.word,
-                    w.img,
-                    GROUP_CONCAT(c.id) as collection_ids,
-                    GROUP_CONCAT(c.name) as collection_names
-                FROM words w
-                LEFT JOIN word_collections wc ON w.id = wc.word_id
-                LEFT JOIN collections c ON wc.collection_id = c.id
-                GROUP BY w.id
-            `);
+            let query = `
+            SELECT 
+                w.id,
+                w.word,
+                w.img,
+                GROUP_CONCAT(c.id) as collection_ids,
+                GROUP_CONCAT(c.name) as collection_names
+            FROM words w
+            LEFT JOIN word_collections wc ON w.id = wc.word_id
+            LEFT JOIN collections c ON wc.collection_id = c.id
+        `;
+
+            const params: any[] = [];
+            if (collectionId !== undefined) {
+                query += ` WHERE EXISTS (
+                SELECT 1 
+                FROM word_collections wc2 
+                WHERE wc2.word_id = w.id 
+                AND wc2.collection_id = ?
+            )`;
+                params.push(collectionId);
+            }
+
+            query += ' GROUP BY w.id';
+
+            const [wordsResult] = await this.db.executeSql(query, params);
 
             return Array.from({ length: wordsResult.rows.length })
                 .map((_, index) => {
@@ -130,10 +144,11 @@ export class WordsRepository {
                     };
                 });
         } catch (error) {
-            console.error('Error getting all words:', error);
+            console.error('Error getting words:', error);
             throw new Error('Failed to get words');
         }
     }
+
 
     private async getById(id: number): Promise<Word> {
         const [result] = await this.db.executeSql(`

@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }: Props): React.JSX.Element => {
               style={styles.button}
               onPress={() => navigation.navigate('CardGame')}
           >
-            <Text style={styles.buttonText}>Грати</Text>
+            <Text style={styles.buttonText}>Гра "збери слово"</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

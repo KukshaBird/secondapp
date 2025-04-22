@@ -1,12 +1,5 @@
-export { default as CharacterBoxes } from './CharacterBoxes';
-export { default as WordCard } from './WordCard';
-export { default as WordDisplay } from './WordDisplay';
-export { default as TwistedWordCard } from './TwistedWordCard';
-export { default as DraggableCharacter } from './DraggableCharacter';
-export { default as WordTargetArea } from './WordTargetArea';
-export { default as WordGame } from './WordGame';
+
+export { default as WordGame } from './WordGame/WordGame.tsx';
 export { default as DifficultySelector } from './DifficultySelector';
-export { default as Effects } from './Effects';
-export { default as ShakeView } from './ShakeView';
 export type { Difficulty } from './DifficultySelector';
 export type { EffectType } from './Effects'; 

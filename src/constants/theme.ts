@@ -31,6 +31,7 @@ export const COLORS = {
   
   // Others
   shadow: 'rgba(113, 128, 150, 0.2)',
+  white: '#FFFFFF',
 };
 
 export const TYPOGRAPHY = {

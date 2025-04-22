@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
-import { transformWord } from '../utils/textTransformations';
-import DraggableCharacter from './DraggableCharacter';
-import WordTargetArea from './WordTargetArea';
-import { WordGameProps, GameStatus } from '../types';
-import { Difficulty } from './DifficultySelector';
-import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../constants';
-import Effects from './Effects';
-import ShakeView from './ShakeView';
-import { playSoundEffect, releaseSounds } from '../utils/soundEffects';
+import { transformWord } from '../../utils/textTransformations.ts';
+import DraggableCharacter from '../DraggableCharacter.tsx';
+import WordTargetArea from '../WordTargetArea.tsx';
+import { WordGameProps, GameStatus } from '../../types';
+import { Difficulty } from '../DifficultySelector.tsx';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '../../constants';
+import Effects from '../Effects.tsx';
+import ShakeView from '../ShakeView.tsx';
+import { playSoundEffect, releaseSounds } from '../../utils/soundEffects.ts';
 
 interface ExtendedWordGameProps extends WordGameProps {
   difficulty?: Difficulty;

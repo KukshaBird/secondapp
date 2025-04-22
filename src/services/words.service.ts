@@ -10,8 +10,8 @@ class WordsService {
         return this.wordsRepository.create(data);
     }
 
-    public async getWords() {
-        return this.wordsRepository.getAll();
+    public async getWords(collectionId?: number) {
+        return this.wordsRepository.getAll(collectionId);
     }
 }
 

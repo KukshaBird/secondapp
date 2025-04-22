@@ -24,9 +24,6 @@ function App(): React.JSX.Element {
   // TODO:
   //  - Create client for requests
   //  - Create class for s3 data upload
-  //  - Create default seeds for init db
-  //  - Handle small collections
-  //  - Add Collections selector
 
   return <NavigationContainer>
     <Stack.Navigator
