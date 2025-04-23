@@ -34,11 +34,10 @@ class ImagePersistorService implements ImagePersistor {
         try {
             // Generate unique filename using timestamp
             const extension = uri.split('.').pop();
-            const savedFilename = `${filename}.${extension}`;
+            const savedFilename = `${filename}-${Date.now()}.${extension}`;
             const destPath = `${this.imagePath}/${savedFilename}`;
 
             const sourceUri = uri.replace('file://', '');
-            await this.validatePath(destPath);
 
             // If URI is a remote URL, download it
             if (uri.startsWith('http')) {
@@ -69,14 +68,6 @@ class ImagePersistorService implements ImagePersistor {
             throw new Error('Image deletion failed');
         }
     }
-
-    private async validatePath(path: string): Promise<void> {
-        if (await RNFS.exists(path)) {
-            throw new Error('Image with this name already exists');
-        }
-        return;
-    }
-
 
     private async initializeStorage() {
         try {
