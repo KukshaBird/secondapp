@@ -1,5 +1,5 @@
-import { Alert, Text, TouchableOpacity } from "react-native";
-import { styles } from "../../screens/styles.ts";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { COLORS, SPACING, TYPOGRAPHY } from "../../constants";
 
 interface DeleteCollectionProps {
     id: number;
@@ -25,10 +25,28 @@ export const DeleteCollection = ({id, onConfirm}: DeleteCollectionProps) => {
         );
     };
 
-
     return (
         <TouchableOpacity style={styles.smallButton} onPress={handleDelete}>
-            <Text style={styles.title}>Видалити</Text>
+            <Text style={styles.buttonText}>Видалити</Text>
         </TouchableOpacity>
     );
 }
+
+const styles = StyleSheet.create({
+    buttonText: {
+        color: 'white',
+        fontWeight: TYPOGRAPHY.fontWeights.medium,
+        fontSize: TYPOGRAPHY.fontSizes.sm,
+        textAlign: 'center',
+    },
+    smallButton: {
+        backgroundColor: COLORS.primaryDark,
+        marginVertical: SPACING.xs,
+        paddingVertical: SPACING.xs,
+        paddingHorizontal: SPACING.xs,
+        borderRadius: 12,
+        width: '100%',
+        maxWidth: 100,
+        elevation: 3,
+    },
+});

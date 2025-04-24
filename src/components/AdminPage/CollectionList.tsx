@@ -1,18 +1,22 @@
 import { Collection } from "../../types/word.types.ts";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { DeleteCollection } from "./DeleteCollection.tsx";
+import { COLORS, SPACING, TYPOGRAPHY } from "../../constants";
 
 interface CollectionListProps {
     data: Collection[];
     onDelete: (id: number) => void;
+    onEdit: (collection: Collection) => void;
 }
 
-export const CollectionList = ({data, onDelete}: CollectionListProps) => {
+export const CollectionList = ({data, onDelete, onEdit}: CollectionListProps) => {
     const renderItem = ({ item }: { item: Collection }) => (
         <View style={styles.itemContainer}>
             <Text style={styles.name}>{item.name}</Text>
             <View style={styles.buttonsContainer}>
-                {/* Edit button placeholder */}
+                <TouchableOpacity style={styles.smallButton} onPress={() => onEdit(item) } >
+                    <Text style={styles.title}>Редагувати</Text>
+                </TouchableOpacity>
                 <DeleteCollection id={item.id} onConfirm={onDelete} />
             </View>
         </View>
@@ -30,7 +34,7 @@ export const CollectionList = ({data, onDelete}: CollectionListProps) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
@@ -39,10 +43,28 @@ const styles = StyleSheet.create({
     },
     name: {
         flex: 1,
-        fontSize: 16,
+        fontSize: 24,
+        color: COLORS.darkText,
     },
     buttonsContainer: {
         flexDirection: 'row',
         gap: 8, // Note: gap might not work on older React Native versions
-    }
+    },
+    smallButton: {
+        backgroundColor: COLORS.primaryDark,
+        marginVertical: SPACING.xs,
+        paddingVertical: SPACING.xs,
+        paddingHorizontal: SPACING.xs,
+        borderRadius: 12,
+        width: '100%',
+        maxWidth: 100,
+        elevation: 3,
+    },
+    title: {
+        fontSize: TYPOGRAPHY.fontSizes.sm,
+        fontWeight: TYPOGRAPHY.fontWeights.bold,
+        textAlign: 'center',
+        color: 'white',
+        marginBottom: SPACING.xs,
+    },
 });

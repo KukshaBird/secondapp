@@ -17,6 +17,10 @@ class CollectionsService {
     public async delete(id: number) {
         return this.collectionsRepository.delete(id);
     }
+
+    public async update(id: number, data: Partial<Collection>) {
+        return this.collectionsRepository.update(id, data);
+    }
 }
 
 export default CollectionsService;

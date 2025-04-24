@@ -44,6 +44,11 @@ export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) 
         }
     }
 
+    const handleEdit = (data: Collection) => {
+        const {id, ...rest} = data
+        navigation.navigate('UpdateForm', {collectionId: id, collection: rest})
+    }
+
     return (
         <>
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
@@ -54,7 +59,7 @@ export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) 
                 >
                     <Text style={styles.buttonText}>Створити Колекцію</Text>
                 </TouchableOpacity>
-                <CollectionList data={collections} onDelete={handleDelete} />
+                <CollectionList data={collections} onDelete={handleDelete} onEdit={handleEdit} />
             </SafeAreaView>
         </>
     );

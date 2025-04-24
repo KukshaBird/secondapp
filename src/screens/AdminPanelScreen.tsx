@@ -4,6 +4,8 @@ import { AdminPageWords, AdminPanel } from "../components/AdminPage";
 import { AdminPageCollections } from "../components/AdminPage/AdminPageCollections.tsx";
 import { WordFormScreen } from "./CreateWordScreen.tsx";
 import { CollectionFormScreen } from "./CreateCollectionScreen.tsx";
+import { UpdateCollectionScreen } from "./UpdateCollectionScreen.tsx";
+import { UpdateCollectionDto } from "../types/collections.types.ts";
 
 export type AdminStackParamList = {
     Panel: undefined;
@@ -11,6 +13,7 @@ export type AdminStackParamList = {
     WordForm: undefined;
     Collections: undefined;
     CollectionForm: undefined;
+    UpdateForm: { collectionId: number, collection: UpdateCollectionDto};
 }
 
 const AdminStack = createNativeStackNavigator<AdminStackParamList>({
@@ -20,6 +23,7 @@ const AdminStack = createNativeStackNavigator<AdminStackParamList>({
         Collections: AdminPageCollections,
         WordForm: WordFormScreen,
         CollectionForm: CollectionFormScreen,
+        UpdateForm: UpdateCollectionScreen,
     },
 });
 
@@ -35,6 +39,7 @@ const AdminPanelScreen = (): React.JSX.Element => {
             <AdminStack.Screen name="Collections" component={AdminPageCollections} />
             <AdminStack.Screen name="WordForm" component={WordFormScreen} />
             <AdminStack.Screen name="CollectionForm" component={CollectionFormScreen} />
+            <AdminStack.Screen name="UpdateForm" component={UpdateCollectionScreen} />
         </AdminStack.Navigator>
 
 };

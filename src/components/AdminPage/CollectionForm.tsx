@@ -4,15 +4,16 @@ import {
     TextInput, ActivityIndicator, Text, TouchableOpacity,
 } from 'react-native';
 import { COLORS } from '../../constants';
-import { CreateCollectionDto } from "../../types/collections.types.ts";
+import { CreateCollectionDto, UpdateCollectionDto } from "../../types/collections.types.ts";
 import { styles } from "./styles.ts";
 
 interface CollectionFormProps {
     onSubmit: (values: CreateCollectionDto) => Promise<void>;
+    collection?: UpdateCollectionDto;
 }
 
-export const CollectionForm: React.FC<CollectionFormProps> = ({ onSubmit }) => {
-    const [name, setName] = useState('');
+export const CollectionForm: React.FC<CollectionFormProps> = ({ onSubmit, collection }) => {
+    const [name, setName] = useState(collection?.name || '');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +60,7 @@ export const CollectionForm: React.FC<CollectionFormProps> = ({ onSubmit }) => {
                 {loading ? (
                     <ActivityIndicator color="white" />
                 ) : (
-                    <Text style={styles.submitButtonText}>Створити Колеуцію</Text>
+                    <Text style={styles.submitButtonText}>{collection ? 'Оновити' : 'Створити' }</Text>
                 )}
             </TouchableOpacity>
         </View>
