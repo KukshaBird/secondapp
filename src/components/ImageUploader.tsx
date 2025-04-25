@@ -61,7 +61,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({value,onChange,size
                     <ActivityIndicator size="large" color={COLORS.primary} />
                 ) : value ? (
                     <Image
-                        source={{ uri: value }}
+                        source={{ uri: value.startsWith('http') ? value : `file://${value}` }}
                         style={styles.image}
                         resizeMode="cover"
                     />
