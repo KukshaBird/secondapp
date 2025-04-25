@@ -17,6 +17,10 @@ class WordsService {
     public async update(id: number, data: UpdateWordDto) {
         return this.wordsRepository.update(id, data);
     }
+
+    public async delete(id: number) {
+        return this.wordsRepository.delete(id);
+    }
 }
 
 export default WordsService;

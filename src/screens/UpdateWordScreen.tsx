@@ -17,6 +17,7 @@ import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
 import { AdminStackParamList } from "./AdminPanelScreen.tsx";
 import { CollectionsRepository } from "../repository/collections.repository.ts";
 import CollectionsService from "../services/collections.service.ts";
+import { DeleteButton } from "../components/AdminPage/DeleteButton.tsx";
 
 type UpdateWordScreenProps = NativeStackScreenProps<AdminStackParamList, 'UpdateWord'>
 
@@ -67,6 +68,19 @@ export const UpdateWordScreen = ({ navigation, route }: UpdateWordScreenProps) =
         }
     }
 
+    const handleDelete = (id: number) => {
+        if (db) {
+            const wordsRepository = new WordsRepository(db);
+            const wordService = new WordsService(wordsRepository);
+            const createWord = async () => {
+                await wordService.delete(id);
+                await persistor.deleteImage(word.img);
+                navigation.navigate('Words')
+            }
+            createWord().then();
+        }
+    }
+
     useEffect(() => {
         // Initialize the image persistor
         persistor.ensureInitialized().catch(console.error);
@@ -84,6 +98,7 @@ export const UpdateWordScreen = ({ navigation, route }: UpdateWordScreenProps) =
                     <Text style={styles.title}>Оновити картку</Text>
                 </View>
                 <View>
+                    <DeleteButton id={word.id} confirmMsg={"Ви впевнені, що хочете видалити цю картку?"} onConfirm={handleDelete} />
                     <WordForm onSubmit={handleSubmit} collections={collections} wordData={{
                         ...word,
                         collectionIds: word.collections?.map((w) => w.id) || []
