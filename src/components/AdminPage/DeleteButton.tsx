@@ -4,13 +4,14 @@ import { COLORS, SPACING, TYPOGRAPHY } from "../../constants";
 interface DeleteCollectionProps {
     id: number;
     onConfirm: (id: number) => void;
+    confirmMsg?: string;
 }
 
-export const DeleteCollection = ({id, onConfirm}: DeleteCollectionProps) => {
+export const DeleteButton = ({id, onConfirm, confirmMsg}: DeleteCollectionProps) => {
     const handleDelete = () => {
         Alert.alert(
             "Підтвердження видалення",
-            "Ви впевнені, що хочете видалити цю колекцію?",
+            confirmMsg || "Ви впевнені, що хочете видалити цей об'єкт?",
             [
                 {
                     text: "Скасувати",
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     smallButton: {
-        backgroundColor: COLORS.primaryDark,
+        backgroundColor: COLORS.warning,
         marginVertical: SPACING.xs,
         paddingVertical: SPACING.xs,
         paddingHorizontal: SPACING.xs,

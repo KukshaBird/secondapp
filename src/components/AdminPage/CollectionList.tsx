@@ -1,6 +1,6 @@
 import { Collection } from "../../types/word.types.ts";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { DeleteCollection } from "./DeleteCollection.tsx";
+import { DeleteButton } from "./DeleteButton.tsx";
 import { COLORS, SPACING, TYPOGRAPHY } from "../../constants";
 
 interface CollectionListProps {
@@ -17,7 +17,7 @@ export const CollectionList = ({data, onDelete, onEdit}: CollectionListProps) =>
                 <TouchableOpacity style={styles.smallButton} onPress={() => onEdit(item) } >
                     <Text style={styles.title}>Редагувати</Text>
                 </TouchableOpacity>
-                <DeleteCollection id={item.id} onConfirm={onDelete} />
+                <DeleteButton id={item.id} onConfirm={onDelete} confirmMsg={"Ви впевнені, що хочете видалити цю колекцію?"} />
             </View>
         </View>
     );
