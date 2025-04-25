@@ -1,5 +1,5 @@
 import { WordsRepository } from "../repository/words.repository.ts";
-import { Word } from "../types/word.types.ts";
+import { UpdateWordDto, Word } from "../types/word.types.ts";
 
 class WordsService {
     constructor(
@@ -12,6 +12,10 @@ class WordsService {
 
     public async getWords(collectionId?: number) {
         return this.wordsRepository.getAll(collectionId);
+    }
+
+    public async update(id: number, data: UpdateWordDto) {
+        return this.wordsRepository.update(id, data);
     }
 }
 

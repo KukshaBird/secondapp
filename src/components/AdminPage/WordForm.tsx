@@ -7,19 +7,20 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { ImageUploader } from '../ImageUploader.tsx';
-import { CreateWordDto } from '../../types/word.types.ts';
+import { CreateWordDto, UpdateWordDto } from '../../types/word.types.ts';
 import { COLORS } from '../../constants';
 import { styles } from "./styles.ts";
 
 interface WordFormProps {
     onSubmit: (values: CreateWordDto) => Promise<void>;
+    wordData?: UpdateWordDto;
     collections: { id: number; name: string }[];
 }
 
-export const WordForm: React.FC<WordFormProps> = ({ onSubmit, collections }) => {
-    const [word, setWord] = useState('');
-    const [imageUri, setImageUri] = useState('');
-    const [selectedCollections, setSelectedCollections] = useState<number[]>([]);
+export const WordForm: React.FC<WordFormProps> = ({ onSubmit, collections, wordData }) => {
+    const [word, setWord] = useState(wordData?.word || '');
+    const [imageUri, setImageUri] = useState(wordData?.img || '');
+    const [selectedCollections, setSelectedCollections] = useState<number[]>(wordData?.collectionIds || []);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -115,7 +116,7 @@ export const WordForm: React.FC<WordFormProps> = ({ onSubmit, collections }) => 
                 {loading ? (
                     <ActivityIndicator color="white" />
                 ) : (
-                    <Text style={styles.submitButtonText}>Create Word</Text>
+                    <Text style={styles.submitButtonText}>{wordData ? 'Оновити' : 'Створити'}</Text>
                 )}
             </TouchableOpacity>
         </View>

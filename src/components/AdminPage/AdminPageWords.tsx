@@ -33,8 +33,7 @@ export const AdminPageWords = ({ navigation }: AdminPageWordsProps) => {
     }, [db, isConnecting]);
 
     const handleWordPress = (word: Word) => {
-        // TODO: Create WordView and redirect to it;
-        console.log('Selected word:', word);
+        navigation.navigate('UpdateWord', {word: word})
     };
 
     if (isConnecting) {
