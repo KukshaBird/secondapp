@@ -9,14 +9,10 @@ import { WordsRepository } from "../../repository/words.repository.ts";
 import WordsService from "../../services/words.service.ts";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AdminStackParamList } from "../../screens/AdminPanelScreen.tsx";
+import { useNavigation } from "@react-navigation/native";
 
-type AdminPanelScreenNavigationProp = NativeStackNavigationProp<AdminStackParamList, 'Words'>;
-
-interface AdminPageWordsProps {
-    navigation: AdminPanelScreenNavigationProp;
-}
-
-export const AdminPageWords = ({ navigation }: AdminPageWordsProps) => {
+export const AdminPageWords = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<AdminStackParamList>>();
     const [words, setWords] = useState<Word[]>([]);
     const { isConnecting, db } = useConnectDatabase();
 
@@ -42,11 +38,7 @@ export const AdminPageWords = ({ navigation }: AdminPageWordsProps) => {
 
     return (
         <>
-            <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
             <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Управління картками</Text>
-                </View>
                 <TouchableOpacity
                     style={styles.smallButton}
                     onPress={() => navigation.navigate('WordForm')}

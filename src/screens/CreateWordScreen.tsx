@@ -2,29 +2,22 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    StatusBar,
     SafeAreaView,
 } from 'react-native';
 import { Collection, CreateWordDto, Word } from "../types/word.types.ts";
-import { COLORS } from "../constants";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { WordsRepository } from "../repository/words.repository.ts";
 import WordsService from "../services/words.service.ts";
 import { styles } from "./styles.ts";
 import { WordForm } from "../components/AdminPage";
 import ImagePersistorService from "../services/ImagePersistor.service.ts";
 import { useConnectDatabase } from "../hooks/useConnectDatabase.tsx";
-import { AdminStackParamList } from "./AdminPanelScreen.tsx";
 import { CollectionsRepository } from "../repository/collections.repository.ts";
 import CollectionsService from "../services/collections.service.ts";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AdminStackParamList } from "./AdminPanelScreen.tsx";
 
-type CreateWordScreenNavigationProp = NativeStackNavigationProp<AdminStackParamList, 'WordForm'>;
-
-interface WordFormProps {
-    navigation: CreateWordScreenNavigationProp
-}
-
-export const WordFormScreen = ({ navigation }: WordFormProps) => {
+export const WordFormScreen = () => {
+    const navigation = useNavigation<NavigationProp<AdminStackParamList>>();
     const persistor = new ImagePersistorService();
     const { db, isConnecting } = useConnectDatabase();
     const [collections, setCollections] = useState<Collection[]>([])
@@ -74,11 +67,7 @@ export const WordFormScreen = ({ navigation }: WordFormProps) => {
 
     return (
         <>
-            <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
             <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Створити нову картку</Text>
-                </View>
                 <View>
                     <WordForm onSubmit={handleSubmit} collections={collections} />
                 </View>

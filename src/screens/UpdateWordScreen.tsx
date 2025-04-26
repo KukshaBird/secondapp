@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    StatusBar,
     SafeAreaView,
 } from 'react-native';
 import { Collection, UpdateWordDto } from "../types/word.types.ts";
-import { COLORS } from "../constants";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WordsRepository } from "../repository/words.repository.ts";
 import WordsService from "../services/words.service.ts";
 import { styles } from "./styles.ts";
@@ -18,10 +15,12 @@ import { AdminStackParamList } from "./AdminPanelScreen.tsx";
 import { CollectionsRepository } from "../repository/collections.repository.ts";
 import CollectionsService from "../services/collections.service.ts";
 import { DeleteButton } from "../components/AdminPage/DeleteButton.tsx";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-type UpdateWordScreenProps = NativeStackScreenProps<AdminStackParamList, 'UpdateWord'>
 
-export const UpdateWordScreen = ({ navigation, route }: UpdateWordScreenProps) => {
+export const UpdateWordScreen = () => {
+    const navigation = useNavigation<NavigationProp<AdminStackParamList>>()
+    const route = useRoute<RouteProp<AdminStackParamList, 'UpdateWord'>>();
     const { word } = route.params;
     const persistor = new ImagePersistorService();
     const { db, isConnecting } = useConnectDatabase();
@@ -91,20 +90,14 @@ export const UpdateWordScreen = ({ navigation, route }: UpdateWordScreenProps) =
     }
 
     return (
-        <>
-            <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
-            <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Оновити картку</Text>
-                </View>
-                <View>
-                    <DeleteButton id={word.id} confirmMsg={"Ви впевнені, що хочете видалити цю картку?"} onConfirm={handleDelete} />
-                    <WordForm onSubmit={handleSubmit} collections={collections} wordData={{
-                        ...word,
-                        collectionIds: word.collections?.map((w) => w.id) || []
-                    }} />
-                </View>
-            </SafeAreaView>
-        </>
+        <SafeAreaView style={styles.container}>
+            <View>
+                <DeleteButton id={word.id} confirmMsg={"Ви впевнені, що хочете видалити цю картку?"} onConfirm={handleDelete} />
+                <WordForm onSubmit={handleSubmit} collections={collections} wordData={{
+                    ...word,
+                    collectionIds: word.collections?.map((w) => w.id) || []
+                }} />
+            </View>
+        </SafeAreaView>
     )
 };

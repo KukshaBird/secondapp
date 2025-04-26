@@ -68,10 +68,6 @@ export const WordGameWrapper = ({route }: WordGameWrapperProps) => {
         <>
             <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
             <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Збери слово</Text>
-                </View>
-
                 <DifficultySelector
                     difficulty={difficulty}
                     onDifficultyChange={handleDifficultyChange}

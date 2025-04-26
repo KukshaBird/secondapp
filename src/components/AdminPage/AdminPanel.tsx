@@ -1,27 +1,14 @@
 import React from "react";
-import { SafeAreaView, StatusBar, Text, TouchableOpacity, View } from "react-native";
-import { COLORS } from "../../constants";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../../screens/styles.ts";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AdminStackParamList } from "../../screens/AdminPanelScreen.tsx";
 
-type AdminPanelScreenNavigationProp = NativeStackNavigationProp<AdminStackParamList, 'Panel'>;
-
-export interface AdminPanelProps {
-    navigation: AdminPanelScreenNavigationProp;
-}
-
-export const AdminPanel = ({ navigation }: AdminPanelProps): React.JSX.Element => {
-
-
+export const AdminPanel = (): React.JSX.Element => {
+    const navigation = useNavigation<NavigationProp<AdminStackParamList>>();
     return (
         <>
-            <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
             <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Панель управління</Text>
-                </View>
-
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.button}

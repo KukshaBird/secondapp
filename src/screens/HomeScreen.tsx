@@ -3,29 +3,18 @@ import {
   SafeAreaView,
   Text,
   View,
-  StatusBar, TouchableOpacity,
+  TouchableOpacity,
 } from 'react-native';
-import { COLORS } from '../constants';
 import { styles } from "./styles.ts";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App.tsx";
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-interface Props {
-  navigation: HomeScreenNavigationProp;
-}
-
-const HomeScreen = ({ navigation }: Props): React.JSX.Element => {
-
+const HomeScreen = (): React.JSX.Element => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <>
-      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Головне Меню</Text>
-        </View>
-
         <View style={styles.buttonContainer}>
           <TouchableOpacity
               style={styles.button}
@@ -46,7 +35,5 @@ const HomeScreen = ({ navigation }: Props): React.JSX.Element => {
     </>
   );
 };
-
-
 
 export default HomeScreen; 

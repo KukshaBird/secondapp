@@ -34,12 +34,7 @@ export const WordGameMenu = ({navigation}: WordGameMenuProp) => {
     }, [db, isConnecting]);
 
     return <>
-        <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Збери слово</Text>
-            </View>
-
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={styles.button}

@@ -7,17 +7,11 @@ import { CollectionList } from "./CollectionList.tsx";
 import { useConnectDatabase } from "../../hooks/useConnectDatabase.tsx";
 import CollectionsService from "../../services/collections.service.ts";
 import { CollectionsRepository } from "../../repository/collections.repository.ts";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AdminStackParamList } from "../../screens/AdminPanelScreen.tsx";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 
-
-type AdminPanelScreenNavigationProp = NativeStackNavigationProp<AdminStackParamList, 'Collections'>;
-
-interface AdminPageCollectionsProps {
-    navigation: AdminPanelScreenNavigationProp
-}
-
-export const AdminPageCollections = ({ navigation }: AdminPageCollectionsProps) => {
+export const AdminPageCollections = () => {
+    const navigation = useNavigation<NavigationProp<AdminStackParamList>>();
     const [collections, setCollections] = useState<Collection[]>([]);
     const { isConnecting, db } = useConnectDatabase();
 

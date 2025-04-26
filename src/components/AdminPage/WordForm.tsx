@@ -69,7 +69,7 @@ export const WordForm: React.FC<WordFormProps> = ({ onSubmit, collections, wordD
                 style={styles.input}
                 value={word}
                 onChangeText={setWord}
-                placeholder="Enter word"
+                placeholder="Введіть слово"
                 placeholderTextColor={COLORS.darkText}
             />
 
